@@ -26,8 +26,11 @@ const Home = () => {
       .then((data) => {
         if (data.response_code !== 0) {
           const codeMap = {
-            1: "No results could be returned. Please try again with different parameters.",
-            2: "Invalid Parameter was passed. Your request is malformed.",
+            1: "No Results Could not return results. The API doesn't have enough questions for your query.",
+            2: "Invalid Parameter Contains an invalid parameter. Arguements passed in aren't valid.",
+            3: "Token Not Found Session Token does not exist.",
+            4: "Token Empty Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.",
+            5: "Rate Limit Too many requests have occurred. Each IP can only access the API once every 5 seconds.",
           };
           throw new Error(
             codeMap[data.response_code] || "API returned an error code."
@@ -53,7 +56,9 @@ const Home = () => {
         console.error("Failed to fetch questions:", e);
         setError(`Failed to load trivia data: ${e.message}`);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -117,19 +122,6 @@ const Home = () => {
           <StatisticIcon className="w-7 h-7 mr-2 text-indigo-800" />
           Trivia Statistics
         </h1>
-
-        <button
-          onClick={() => fetchQuestions(API_URL)}
-          className={`p-2 rounded-full transition duration-200 border-none shadow-md ${
-            loading
-              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-indigo-700 text-white hover:bg-indigo-800"
-          }`}
-          disabled={loading}
-          title="Reload data"
-        >
-          <RefreshIcon className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
-        </button>
       </header>
       <div className="mb-10 text-center flex items-center justify-center space-x-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200 shadow-inner">
         <FilterIcon className="w-5 h-5 text-indigo-800" />
