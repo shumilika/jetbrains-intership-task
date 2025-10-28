@@ -19,7 +19,7 @@ const DifficultyChart = ({ chartData }) => {
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg w-full">
       <div className="m-5 p-5">
         <h2 className="text-lg font-bold text-gray-700 mb-4 border-b border-gray-200 pb-2">
-          Difficulty Distribution
+          Distribution of questions by difficulty
         </h2>
       </div>
       <div className="w-full h-[420px] max-w-[500px]">

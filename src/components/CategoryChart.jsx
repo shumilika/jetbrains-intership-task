@@ -16,7 +16,7 @@ const CategoryChart = ({ chartData }) => {
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg w-full">
       <div className="m-5 p-5">
         <h2 className="text-lg font-bold text-gray-700 mb-4 border-b border-gray-200 pb-2">
-          Category Distribution
+          Distribution of questions by category
         </h2>
       </div>
 

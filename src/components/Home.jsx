@@ -3,6 +3,9 @@ import CategoryChart from "./CategoryChart";
 import DifficultyChart from "./DifficultyChart";
 import { API_URL } from "../constants";
 import { processQuestions } from "../service/DataService";
+import StatisticIcon from "../icons/StatisticIcon";
+import FilterIcon from "../icons/FilterIcon";
+import RefreshIcon from "../icons/RefreshIcon";
 
 const Home = () => {
   const [fullData, setFullData] = useState([]);
@@ -21,7 +24,6 @@ const Home = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("data");
         if (data.response_code !== 0) {
           const codeMap = {
             1: "No results could be returned. Please try again with different parameters.",
@@ -80,16 +82,59 @@ const Home = () => {
     }, {})
   ).map(([difficulty, count]) => ({ difficulty, count }));
 
+  if (loading && fullData.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[90vh] bg-gray-100">
+        <div className="flex flex-col items-center space-y-3 text-gray-700 p-8 bg-white rounded-xl shadow-lg">
+          <RefreshIcon className="w-10 h-10 animate-spin text-blue-600" />
+          <p className="text-xl font-medium">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (fullData.length === 0 && error) {
+    return (
+      <div className="flex items-center justify-center min-h-[90vh] bg-gray-100 p-4">
+        <div className="p-8 bg-white border border-red-200 text-red-700 rounded-xl shadow-lg max-w-lg mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-3">Error Loading Data</h2>
+          <p className="mb-4">{error}</p>
+          <button
+            onClick={() => fetchQuestions()}
+            className="px-6 py-2 bg-red-700 text-white rounded-lg shadow-md hover:bg-red-800 transition duration-150"
+          >
+            Try Reloading Data
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-6 md:p-8 border-t-4 border-indigo-500">
-      <header className="mb-8 text-center flex justify-center items-center">
-        <h1 className="text-3xl font-extrabold text-gray-800">
+    <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl p-6 md:p-8 border-t-4 border-indigo-800">
+      <header className="mb-8 flex justify-center items-center gap-2 w-full">
+        <h1 className="text-3xl font-extrabold text-gray-800 flex items-center mx-auto">
+          <StatisticIcon className="w-7 h-7 mr-2 text-indigo-800" />
           Trivia Statistics
         </h1>
+
+        <button
+          onClick={() => fetchQuestions(API_URL)}
+          className={`p-2 rounded-full transition duration-200 border-none shadow-md ${
+            loading
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-indigo-700 text-white hover:bg-indigo-800"
+          }`}
+          disabled={loading}
+          title="Reload data"
+        >
+          <RefreshIcon className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
+        </button>
       </header>
       <div className="mb-10 text-center flex items-center justify-center space-x-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200 shadow-inner">
+        <FilterIcon className="w-5 h-5 text-indigo-800" />
         <label htmlFor="categories" className="text-indigo-800 font-semibold">
-          Category:{" "}
+          Category:
         </label>
         <select
           id="categories"
